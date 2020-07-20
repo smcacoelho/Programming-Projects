@@ -1,0 +1,47 @@
+class Pokemon:
+  def __init__():
+    self.name
+    self.level 
+    self.type
+    self.max_health
+    self.health
+    self.ko
+
+  def lose_health():
+    self.health+=10
+    print(self.name + " just lost 10 health")
+
+  def gain_health():
+    self.health+=10
+    print(self.name + " just gained 10 health")
+  
+  def knock_out():
+    self.ko = true
+    self.health = 0
+    print(self.name + " was knocked out")
+  
+  def attack(pokemon):
+    if(self.type == pokemon.type):
+      pokemon.health -= self.level
+      print(pokemon.name + "has lost " + str(self.level)+" health")
+
+      return
+
+    if self.type == "grass":
+      pokemon.health-=0.5*self.level
+      print(pokemon.name + "has lost " + str(0.5*self.level)+ " health")
+
+    if(self.type == "water" and pokemon.type == "fire"):
+      pokemon.health-=0.5*self.level
+      print(pokemon.name + "has lost " + str(0.5*self.level) + " health")
+
+    if self.type == "water" and pokemon.type == "grass":
+      pokemon.health-=2*self.level
+      print(pokemon.name + "has lost " + str(2*self.level) + " health")
+    if self.type == "fire" and pokemon.type == "grass":
+      pokemon.health-=2*self.level
+      print(pokemon.name + "has lost " + str(2*self.level) + " health")
+    if(self.type == "fire" and pokemon.type == "water"):
+      pokemon.health-=0.5*self.level
+      print(pokemon.name + "has lost " + str(0.5*self.level) + " health")
+
