@@ -1,0 +1,27 @@
+let humanScore = 0;
+let computerScore = 0;
+let currentRoundNumber = 1;
+
+// Returns a random number 
+function generateTarget(){ 
+  return Math.floor(Math.random() * 10);
+}
+
+// Compares distance to target
+function compareGuesses(computer, user, target){
+  var computerGuess = getAbsoluteDistance(computer, target);
+  var userGuess = getAbsoluteDistance(user, target);
+  return userGuess >= computerGuess;
+}
+
+function updateScore(winner){
+  winner == "computer"? computerScore++: humanScore++;
+}
+
+function advanceRound(){
+  currentRoundNumber++;
+}
+
+function getAbsoluteDistance(player, target){
+  return Math.abs(player-target);
+}
