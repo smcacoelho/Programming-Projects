@@ -1,47 +1,75 @@
 class Pokemon:
-  def __init__():
-    self.name
-    self.level 
-    self.type
-    self.max_health
-    self.health
-    self.ko
+  def __init__(self,name, level, type, max_health):
+    self.name = name
+    self.level = level
+    self.type = type
+    self.max_health = max_health
+    self.health = max_health
+    self.ko = False
 
-  def lose_health():
+  def lose_health(self):
     self.health+=10
-    print(self.name + " just lost 10 health")
+    print(f"{self.name} just lost 10 health")
 
-  def gain_health():
+  def gain_health(self):
     self.health+=10
-    print(self.name + " just gained 10 health")
+    print(f"{self.name} just gained 10 health")
   
-  def knock_out():
+  def knock_out(self):
     self.ko = true
     self.health = 0
-    print(self.name + " was knocked out")
+    print(f"{self.name} was knocked out")
   
-  def attack(pokemon):
-    if(self.type == pokemon.type):
+  def attack(self,pokemon):
+    if self.type == pokemon.type:
       pokemon.health -= self.level
-      print(pokemon.name + "has lost " + str(self.level)+" health")
-
-      return
-
+      print(f"lost + {self.level}")
+      
     if self.type == "grass":
       pokemon.health-=0.5*self.level
-      print(pokemon.name + "has lost " + str(0.5*self.level)+ " health")
-
-    if(self.type == "water" and pokemon.type == "fire"):
+      print(f"lost {self.level*0.5}")
+     
+    if self.type == "water" and pokemon.type == "fire":
       pokemon.health-=0.5*self.level
-      print(pokemon.name + "has lost " + str(0.5*self.level) + " health")
-
+      print(f"lost {self.level*0.5}")
+      
     if self.type == "water" and pokemon.type == "grass":
       pokemon.health-=2*self.level
-      print(pokemon.name + "has lost " + str(2*self.level) + " health")
+      print(f"lost {self.level*2}")
+      
     if self.type == "fire" and pokemon.type == "grass":
       pokemon.health-=2*self.level
-      print(pokemon.name + "has lost " + str(2*self.level) + " health")
-    if(self.type == "fire" and pokemon.type == "water"):
-      pokemon.health-=0.5*self.level
-      print(pokemon.name + "has lost " + str(0.5*self.level) + " health")
+      print(f"lost {self.level*2}")
 
+    if self.type == "fire" and pokemon.type == "water":     
+      pokemon.health-=0.5*self.level
+      print(f"lost {self.level*0.5}")
+
+class Trainer:
+  def __init__(self,name,potions, pokemons):
+    self.name = name
+    self.potions = potions
+    self.pokemons = pokemons
+    self.active = pokemons[0]
+  
+  def takePotion(self):
+    self.active.gain_Health();
+  
+  def switchActive(self,index):
+    if index >= len(self.pokemons) or index < 0 :
+      f"Pokemon does not exist"
+    self.active.name = self.pokemons[index]
+    print(f"pokemon changed to {self.active.name}")
+  
+  def attack(self,trainer):
+    self.active.attack(trainer.active)
+    print(f"{self.active.name} attacks {trainer.active}")
+  
+a = Pokemon("a", 1, "water", 100)
+b = Pokemon("b", 1, "grass", 100)
+c = Pokemon("c", 1, "fire", 100)
+simon = Trainer("Simon", 4, [a,b,c])
+bet = Trainer("Bet", 3, [a,b,c])
+bet.switchActive(2);
+print(simon.name);
+simon.attack(bet);
