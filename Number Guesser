@@ -8,7 +8,7 @@ function generateTarget(){
 }
 
 // Compares distance to target
-function compareGuesses(computer, user, target){
+function compareGuesses(user, computer target){
   var computerGuess = getAbsoluteDistance(computer, target);
   var userGuess = getAbsoluteDistance(user, target);
   return userGuess >= computerGuess;
