@@ -8,7 +8,7 @@ def flipping(betValue, bet):
   tempBet = bet.lower()
 
   check = errorInput(betValue,tempBet, "heads", "tails")
-  if not check:
+  if check:
     return check
  
   coin = random.randint(0,1)
@@ -57,16 +57,27 @@ def choHan(betValue, bet):
     else:
       print("The sum of the dice is Odd! money - "+str(betValue))
 
-def cardGame(betValue, bet):
+# This game assumes that cards are worth
+def cardGame(betValue, bet):  
   tempBet = bet.lower()
   check = errorInput(betValue, tempBet, "high", "low")
   if(check):
     return check
-  numOfCards = [4,4,4,4,4,4,4,4,4,4,4,4,4]
+    
   player1 = random.randint(0,12);
   numOfCards[player1]=-1
   player2 = random.randint(0,12);
   numOfCards[player2]=-1
+  card1 = player1+2;
+  card2 = player2+2;
+
+  if(card1>card2):
+    print("player 1 wins")
+  elif card2> card1:
+    print("player2 wins")
+  else:
+    print("Its a tie! No winners")
+
 
 
 
@@ -76,6 +87,8 @@ def cardGame(betValue, bet):
 def roulette(betValue, bet):
   num = random.randint(0,38);
 
+
+
 def errorInput(betValue, tempBet, betOption1, betOption2):
   if betValue < 0 or betValue > money:
     return "Bet value invalid. Try Again"
@@ -83,10 +96,10 @@ def errorInput(betValue, tempBet, betOption1, betOption2):
   if tempBet != betOption1 or tempBet != betOption2:
     return "Invalid bet. Try Again"
 
-  return ""
+  return 0
 
 #Call your game of chance functions here
-print(flipping(50,"tailss"));
+print(flipping(50,"tails"));
 print (money);
 
 #choHan(5, "Odd");
