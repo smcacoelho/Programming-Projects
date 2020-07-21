@@ -1,92 +1,79 @@
-import random
+using System;
 
-money = 100
+namespace ConsoleGame
+{
+  class Game : SuperGame
+  {
+    //Changes position based on the key pressed
+    public new static void UpdatePosition(string key, out int x, out int y){
+      x = 0; 
+      y = 0;
 
-#Write your game of chance functions here
-def flipping(betValue, bet):
-  global money
-  tempBet = bet.lower()
+      switch(key){
+        case "S":
+        case "DownArrow":
+        y++;
+        break;
 
-  check = errorInput(betValue,tempBet, "heads", "tails")
-  if not check:
-    return check
- 
-  coin = random.randint(0,1)
-  gain = betValue * 2
-  loss = betValue*-1
-   
+        case "W":
+        case "UpArrow":
+        y--;
+        break;
+        
+        case "A":
+        case "LeftArrow":
+        x--;
+        break;
+        
+        case "D":
+        case "RightArrow":
+        x++;
+        break;
+      }
+    }
 
-  if tempBet == "heads":
-    if coin:
-      money += gain
-      return "HEADS! You win " + str(gain)
-      
-    else:  
-      money += loss
-      return "TAILS! You lose " + str(loss)
-      
-  elif tempBet == "tails":
-    if coin:
-      money += loss
-      return "HEADS! You lose " + str(loss)
-      
-    else:
-      money += gain
-      return "TAILS! You win " + str(gain)
-      
-  
- 
-def choHan(betValue, bet):
-  tempBet = bet.lower(); 
-  check = errorInput(betValue, tempBet, "odd", "even")
-  if(not check):
-    return check
-  dice1 = random.randint(1, 6);
-  dice2 = random.randint(1, 6);
-  evenSum = True if (dice1 + dice2) % 2 == 0 else False
-  
-  if tempBet == "odd":
-    if evenSum:
-      print("The sum of the dice is Even! You lose " + str(betValue));
-    else:
-      print("The sum of the dice is Odd! You win " + str(2*betValue))
+    //Updates cursor to match position change
+    public static new char UpdateCursor(string key){
 
-  elif tempBet == "even":
-    if evenSum:
-      print("The sum of the dice is Even! Congrats! You win " + str(2*betValue))
-    else:
-      print("The sum of the dice is Odd! money - "+str(betValue))
+      switch(key){
+        case "W":
+        case "UpArrow":
+          return '^';
+          break;
 
-def cardGame(betValue, bet):
-  tempBet = bet.lower()
-  check = errorInput(betValue, tempBet, "high", "low")
-  if(check):
-    return check
-  numOfCards = [4,4,4,4,4,4,4,4,4,4,4,4,4]
-  player1 = random.randint(0,12);
-  numOfCards[player1]=-1
-  player2 = random.randint(0,12);
-  numOfCards[player2]=-1
+        case "S":
+        case "DownArrow":
+          return 'v';
+          break;
 
+        case "A":
+        case "LeftArrow":
+          return '<';
+          break;
 
+        case "D":
+        case "RightArrow":
+          return '>';
+          break;
+      }      
+      return '<'; //displayed in case some other key is pressed
+    }
 
-
-
-  #odd numbers black even red
-def roulette(betValue, bet):
-  num = random.randint(0,38);
-
-def errorInput(betValue, tempBet, betOption1, betOption2):
-  if betValue < 0 or betValue > money:
-    return "Bet value invalid. Try Again"
-  
-  if tempBet != betOption1 or tempBet != betOption2:
-    return "Invalid bet. Try Again"
-
-  return ""
-
-#Call your game of chance functions here
-print(flipping(50,"tailss"));
-print (money);
-
-#choHan(5, "Odd");
+    //Avoids the game breaking if the cursor position goes outside the boundaries. Loops around the the bounds of the screen
+    public new static int KeepInBounds(int coord, int max){
+      if(coord >= max){ 
+        return 0;
+      }
+      else if(coord < 0){
+        return max - 1;
+      }
+      else {
+        return coord;
+      }
+    }
+    //Adds a point everytime the fruit & character  overlap
+    public new static bool DidScore(int charX, int charY, int fruitX, int fruitY){
+    return charX == fruitX && charY == fruitY? true:false;
+    }
+  }
+}
