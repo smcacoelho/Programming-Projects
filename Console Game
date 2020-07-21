@@ -73,7 +73,7 @@ namespace ConsoleGame
     }
     //Adds a point everytime the fruit & character  overlap
     public new static bool DidScore(int charX, int charY, int fruitX, int fruitY){
-    return charX == fruitX && charY == fruitY? true:false;
+      return charX == fruitX && charY == fruitY? true:false;
     }
   }
 }
