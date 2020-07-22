@@ -8,44 +8,49 @@ class Pokemon:
     self.ko = False
 
   def lose_health(self):
-    self.health+=10
+    self.health-=10
     print(f"{self.name} just lost 10 health")
+    if self.health == 0:
+      self.knock_out(self)
 
   def gain_health(self):
     self.health+=10
     print(f"{self.name} just gained 10 health")
   
   def knock_out(self):
-    self.ko = true
-    self.health = 0
+    self.ko = True
     print(f"{self.name} was knocked out")
+
+  def revive(self):
+    self.ko = False
+    print(f"{self.name} was revived")
   
   def attack(self,pokemon):
     if self.ko:
       print(f"{self.name} is ko")
     if self.type == pokemon.type:
       pokemon.health -= self.level
-      print(f"lost {self.level}")
+      print(f"{pokemon.name} lost {pokemon.level} health {pokemon.health}/{pokemon.max_health}")
       
     if self.type == "grass":
       pokemon.health-=0.5*self.level
-      print(f"lost {self.level*0.5}")
+      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
      
     if self.type == "water" and pokemon.type == "fire":
       pokemon.health-=0.5*self.level
-      print(f"lost {self.level*0.5}")
+      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
       
     if self.type == "water" and pokemon.type == "grass":
       pokemon.health-=2*self.level
-      print(f"lost {self.level*2}")
+      print(f"{pokemon.name} lost {pokemon.level*2} health {pokemon.health}/{pokemon.max_health}")
       
     if self.type == "fire" and pokemon.type == "grass":
       pokemon.health-=2*self.level
-      print(f"lost {self.level*2}")
+      print(f"{pokemon.name} lost {pokemon.level*2} health {pokemon.health}/{pokemon.max_health}")
 
     if self.type == "fire" and pokemon.type == "water":     
       pokemon.health-=0.5*self.level
-      print(f"lost {self.level*0.5}")
+      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
 
   def __repr__(self):
     return self.name
@@ -73,17 +78,17 @@ class Trainer:
       print(f"{self.name} active pokemon changed to {self.active.name}")
   
   def attack(self,trainer):
-    self.active.attack(trainer.active)
     print(f"{self.active.name} attacks {trainer.active.name}")
+    self.active.attack(trainer.active)
   
   
-
-  
-bulbazur = Pokemon("bulbazur", 1, "water", 100)
-pikachu = Pokemon("pikachu", 1, "grass", 100)
-charizard = Pokemon("charizard", 1, "fire", 100)
-simon = Trainer("Simon", 4, [pikachu,charizard,bulbazur])
-bet = Trainer("Bet", 3, [bulbazur,pikachu,charizard])
-bet.switchActive(2);
-simon.active
-simon.attack(bet);
+bulbazur = Pokemon("Bulbazur", 1, "water", 2)
+pikachu = Pokemon("Pikachu", 1, "grass", 3)
+charizard = Pokemon("Charizard", 1, "fire", 2)
+Ash = Trainer("Ash", 4, [pikachu,charizard,bulbazur])
+Erika = Trainer("Erika", 3, [bulbazur,pikachu,charizard])
+Ash.attack(Erika);
+Ash.attack(Erika);
+Erika.attack(Ash);
+Erika.attack(Ash);
+Ash.attack(Erika)
