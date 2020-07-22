@@ -21,9 +21,11 @@ class Pokemon:
     print(f"{self.name} was knocked out")
   
   def attack(self,pokemon):
+    if self.ko:
+      print(f"{self.name} is ko")
     if self.type == pokemon.type:
       pokemon.health -= self.level
-      print(f"lost + {self.level}")
+      print(f"lost {self.level}")
       
     if self.type == "grass":
       pokemon.health-=0.5*self.level
@@ -45,6 +47,9 @@ class Pokemon:
       pokemon.health-=0.5*self.level
       print(f"lost {self.level*0.5}")
 
+  def __repr__(self):
+    return self.name
+
 class Trainer:
   def __init__(self,name,potions, pokemons):
     self.name = name
@@ -53,23 +58,32 @@ class Trainer:
     self.active = pokemons[0]
   
   def takePotion(self):
-    self.active.gain_Health();
+    if self.active.health == self.active.max_health:
+      print(f"{self_active} has full energy")
+    else:
+      self.active.gain_Health();
   
   def switchActive(self,index):
     if index >= len(self.pokemons) or index < 0 :
-      f"Pokemon does not exist"
-    self.active.name = self.pokemons[index]
-    print(f"pokemon changed to {self.active.name}")
+      print(f"Pokemon does not exist")
+    elif self.pokemons[index].ko:
+      print(f"Pokemon is ko")
+    else:
+      self.active.name = self.pokemons[index]
+      print(f"{self.name} active pokemon changed to {self.active.name}")
   
   def attack(self,trainer):
     self.active.attack(trainer.active)
-    print(f"{self.active.name} attacks {trainer.active}")
+    print(f"{self.active.name} attacks {trainer.active.name}")
   
-a = Pokemon("a", 1, "water", 100)
-b = Pokemon("b", 1, "grass", 100)
-c = Pokemon("c", 1, "fire", 100)
-simon = Trainer("Simon", 4, [a,b,c])
-bet = Trainer("Bet", 3, [a,b,c])
+  
+
+  
+bulbazur = Pokemon("bulbazur", 1, "water", 100)
+pikachu = Pokemon("pikachu", 1, "grass", 100)
+charizard = Pokemon("charizard", 1, "fire", 100)
+simon = Trainer("Simon", 4, [pikachu,charizard,bulbazur])
+bet = Trainer("Bet", 3, [bulbazur,pikachu,charizard])
 bet.switchActive(2);
-print(simon.name);
+simon.active
 simon.attack(bet);
