@@ -2,104 +2,225 @@ import random
 
 money = 100
 
-#Write your game of chance functions here
+# flipping coin game
 def flipping(betValue, bet):
-  global money
-  tempBet = bet.lower()
+  print("You are playing flip the coin!")
+  
+  #checks if user arguments are valid 
+  wrongInput = checkInput(bet, "heads", "tails")
+  noFunds = checkFunds(betValue)
+  if wrongInput:
+    print(wrongInput)
+    return 0
+  if noFunds:
+    print(noFunds)
+    return 0
+  bet = bet.lower() # converts input to lowercase to allow all variations of "heads" and "tails"
 
-  check = errorInput(betValue,tempBet, "heads", "tails")
-  if check:
-    return check
- 
-  coin = random.randint(0,1)
-  gain = betValue * 2
-  loss = betValue*-1
-   
+  heads = random.randint(0,1)
+  profit = betValue * 2
+  loss = betValue * -1
 
-  if tempBet == "heads":
-    if coin:
-      money += gain
-      return "HEADS! You win " + str(gain)
+  if bet == "heads": 
+    if heads:
+      print(f"Your bet: {bet}\n Result heads\n You win {profit}")
+      return profit
       
     else:  
-      money += loss
-      return "TAILS! You lose " + str(loss)
+      print(f"Your bet: {bet}\n Result tails\n You lose {loss}")
+      return loss
       
-  elif tempBet == "tails":
-    if coin:
-      money += loss
-      return "HEADS! You lose " + str(loss)
+  else: 
+    if heads:
+      print(f"Your bet: {bet}\n Result heads\n You lose {loss}")
+      return loss
       
     else:
-      money += gain
-      return "TAILS! You win " + str(gain)
+      print(f"Your bet: {bet}\n Result tails\n You win {profit}")
+      return profit
       
   
- 
+# a user bets if the sum of two dice is odd or even 
 def choHan(betValue, bet):
-  tempBet = bet.lower(); 
-  check = errorInput(betValue, tempBet, "odd", "even")
-  if(not check):
-    return check
+  print("You are playing Cho Han!")
+  
+  #checks if user arguments are valid
+  wrongInput = checkInput(bet, "odd", "even")
+  noFunds = checkFunds(betValue)
+  if wrongInput:
+    print(wrongInput)
+    return 0
+  if noFunds:
+    print(noFunds)
+    return 0
+  
+  bet = bet.lower()
   dice1 = random.randint(1, 6);
   dice2 = random.randint(1, 6);
+  profit = betValue * 2
+  loss = betValue*-1
+
   evenSum = True if (dice1 + dice2) % 2 == 0 else False
-  
-  if tempBet == "odd":
+   
+  if bet == "odd":
     if evenSum:
-      print("The sum of the dice is Even! You lose " + str(betValue));
+      print(f"Your bet: {bet}\n Result even\n You lose {loss}")
+      return loss
     else:
-      print("The sum of the dice is Odd! You win " + str(2*betValue))
+      print(f"Your bet: {bet}\n Result odd\n You win {profit}")
+      return profit
 
-  elif tempBet == "even":
-    if evenSum:
-      print("The sum of the dice is Even! Congrats! You win " + str(2*betValue))
-    else:
-      print("The sum of the dice is Odd! money - "+str(betValue))
-
-# This game assumes that cards are worth
-def cardGame(betValue, bet):  
-  tempBet = bet.lower()
-  check = errorInput(betValue, tempBet, "high", "low")
-  if(check):
-    return check
-    
-  player1 = random.randint(0,12);
-  numOfCards[player1]=-1
-  player2 = random.randint(0,12);
-  numOfCards[player2]=-1
-  card1 = player1+2;
-  card2 = player2+2;
-
-  if(card1>card2):
-    print("player 1 wins")
-  elif card2> card1:
-    print("player2 wins")
   else:
-    print("Its a tie! No winners")
+    if evenSum:
+      print(f"Your bet: {bet}\n Result even\n You win {profit}")
+      return profit
+    else:
+      print(f"Your bet: {bet}\n Result odd\n You lose {loss}")
+      return loss
 
 
 
+def cardGame(betValue):  
+  print("You are playing bet Higher Card!")
+
+  
+  noFunds = checkFunds(betValue)
+  if noFunds:
+    print(noFunds)
+    return 0
+  
+  profit = betValue * 2
+  loss = betValue*-1 
+
+  ranking = [2,3,4,5,6,7,8,9,10,"J","Q","K","A"]
+  cardDeck = ranking*4 # creates an array with 52 cards, 13 of each suit
+
+  random.shuffle(cardDeck)
+  #random index for first card
+  randIndex1 = random.randint(0,51);
+  #card equals face value 
+  card1Face = cardDeck[randIndex1]
+  card1Value = ranking.index(card1Face) + 2
+
+  cardDeck.pop(randIndex1) #removes firstCard from deck
+  random.shuffle(cardDeck) 
+
+  randIndex2 = random.randint(0,50); #range reduce to account for removed card
+  card2Face = cardDeck[randIndex2]
+  card2Value = ranking.index(cardDeck[randIndex2]) + 2
+  
+
+  if(card1Value>card2Value):
+    print(f"You: {card1Face}\n Player2: {card2Face}\n You win {profit}")
+    return profit
+  elif card2Value> card1Value:
+    print(f"You: {card1Face}\n Player2: {card2Face}\n You lose {loss}")
+    return loss
+  else:
+    print(f"You: {card1Face}\n Player2: {card2Face}\n Its a tie!")
+    return 0
 
 
 
   #odd numbers black even red
 def roulette(betValue, bet):
-  num = random.randint(0,38);
+  print("You are playing Roulette!")
+  #checks if bet is a number or even/odd value
+  noFunds = checkFunds(betValue)
+  if noFunds:
+    print(noFunds)
+    return 0
+  if isInt(bet) and bet in range(38):
+    numBet = True
+  elif isString(bet):
+    if bet == "00": 
+      pass # no need to go to checkInput
+    else:
+      bet = bet.lower()
+      wrongInput = checkInput(bet, "odd", "even")
+      if wrongInput:
+        print(wrongInput)
+        return 0
+    numBet = False
+  else: #if its neither string or integer
+    print("Invalid bet")
+    return 0
 
+  #profit for betting on a single number
+  insideProfit = 37*betValue 
 
+  #profit for betting on odd/even value
+  outsideProfit = betValue
 
-def errorInput(betValue, tempBet, betOption1, betOption2):
-  if betValue < 0 or betValue > money:
-    return "Bet value invalid. Try Again"
+  #loss for all bets
+  loss = betValue*-1
   
-  if tempBet != betOption1 or tempBet != betOption2:
-    return "Invalid bet. Try Again"
+  ball = random.randint(0,37);
+  wheelSequence = [0,28,9,26,30,11,7,20,32,17,5,22,34,15,3,24,36,13,1,00,27,10,25,29,12,8,19,31,18,6,21,33,16,4,23,35,14,2]
+  result = wheelSequence[ball]
 
+  lost = f"Your bet: {bet}\n Result {result}\n You lose {loss}"
+  won = f"Your bet: {bet}\n Result {result}\n You win "
+
+  resultEven = result % 2 == 0
+
+  if numBet:
+      if(bet == result):
+        print(won + str(insideProfit))
+        return insideProfit
+      else:
+        print(lost)
+        return loss
+  else:
+    if result == 0:
+       print(lost)
+       return loss
+    if((bet == "odd" and resultEven) or (bet == "even" and not resultEven) or (ball != 19 and bet == "00")):
+      print(lost) 
+      return loss
+    if((bet == "odd" and  not resultEven) or (bet == "even" and resultEven) or (ball == 19 and bet == "00")):
+      print(won + str(outsideProfit))
+      return outsideProfit
+    
+
+#helping methods
+
+def isInt(bet):
+  return True if type(bet) == int else False
+
+def isString(bet):
+  return True if type(bet) == str else False
+
+def checkFunds(betValue):
+  if not isInt(betValue):
+    return " Wrong type. Please pass a number"
+  if betValue < 0 or betValue > money:
+    return " Invalid funds. Try Again" 
+  return 0
+
+def checkInput(bet, betOption1, betOption2):
+  if not isString(bet):
+    return " Wrong type. Please pass a string"
+  bet = bet.lower()r
+  if bet != betOption1 and bet != betOption2:
+    return " Invalid bet. Try Again"
   return 0
 
 #Call your game of chance functions here
-print(flipping(50,"tails"));
-print (money);
+money+=flipping(50,"taiLs")
+print (f"Current money {money}\n")
+money+=flipping("taiLs", 50)
+print (f"Current money {money}\n")
+money+=roulette(-2,"00")
+print (f"Current money {money}\n")
+money+=roulette("00","00")
+print (f"Current money {money}\n")
+money+=choHan("Odd", "Odd")
+print (f"Current money {money}\n")
+money+=choHan(5, "Even")
+print (f"Current money {money}\n")
+money+=cardGame(5)
+print (f"Current money {money}\n")
+money+=cardGame("a")
+print (f"Current money {money}\n")
 
-#choHan(5, "Odd");
