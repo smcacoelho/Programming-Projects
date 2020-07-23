@@ -7,52 +7,48 @@ class Pokemon:
     self.health = max_health
     self.ko = False
 
-  def lose_health(self):
-    self.health-=10
-    print(f"{self.name} just lost 10 health")
-    if self.health == 0:
-      self.knock_out(self)
-
+  def lose_health(self, value):
+    self.health-=value
+    if self.health <= 0:
+      self.knock_out()
+    else:
+      print(f"{self.name} just lost {value} health. {self.health}/{self.max_health}")
+    
   def gain_health(self):
-    self.health+=10
-    print(f"{self.name} just gained 10 health")
+    self.health = self.max_health
+    print(f"{self.name} is fully healed")
   
   def knock_out(self):
     self.ko = True
-    print(f"{self.name} was knocked out")
+    print(f"{self.name} just got knocked out\n")
 
   def revive(self):
     self.ko = False
-    print(f"{self.name} was revived")
+    print(f"{self.name} was revived\n")
   
   def attack(self,pokemon):
     if self.ko:
-      print(f"{self.name} is ko")
-    if self.type == pokemon.type:
-      pokemon.health -= self.level
-      print(f"{pokemon.name} lost {pokemon.level} health {pokemon.health}/{pokemon.max_health}")
+      print(f"{self.name} is ko cannot attack. Please change pokemon or heal it\n")
+    else:
+      if self.type == pokemon.type:
+        pokemon.lose_health(self.level)
       
-    if self.type == "grass":
-      pokemon.health-=0.5*self.level
-      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
+      if self.type == "grass":
+        pokemon.lose_health(0.5*self.level)
      
-    if self.type == "water" and pokemon.type == "fire":
-      pokemon.health-=0.5*self.level
-      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
+      if self.type == "water" and pokemon.type == "fire":
+        pokemon.lose_health(0.5*self.level)
       
-    if self.type == "water" and pokemon.type == "grass":
-      pokemon.health-=2*self.level
-      print(f"{pokemon.name} lost {pokemon.level*2} health {pokemon.health}/{pokemon.max_health}")
+      if self.type == "water" and pokemon.type == "grass":
+        pokemon.lose_health(2*self.level)
       
-    if self.type == "fire" and pokemon.type == "grass":
-      pokemon.health-=2*self.level
-      print(f"{pokemon.name} lost {pokemon.level*2} health {pokemon.health}/{pokemon.max_health}")
+      if self.type == "fire" and pokemon.type == "grass":
+        pokemon.lose_health(2*self.level)
 
-    if self.type == "fire" and pokemon.type == "water":     
-      pokemon.health-=0.5*self.level
-      print(f"{pokemon.name} lost {pokemon.level*0.5} health {pokemon.health}/{pokemon.max_health}")
+      if self.type == "fire" and pokemon.type == "water":     
+        pokemon.lose_health(0.5*self.level)
 
-  def __repr__(self):
+  def __repr__(self): #when object is printed name is returned
     return self.name
 
 class Trainer:
@@ -64,31 +60,41 @@ class Trainer:
   
   def takePotion(self):
     if self.active.health == self.active.max_health:
-      print(f"{self_active} has full energy")
+      print(f"{self.active.name} has full energy")
     else:
-      self.active.gain_Health();
+      self.active.gain_health();
+      self.potions-=1
+      print(f"{self.potions} potions left\n")
   
   def switchActive(self,index):
+    print(f"Change to active pokemon number {index}")
     if index >= len(self.pokemons) or index < 0 :
-      print(f"Pokemon does not exist")
+      print(f"{self.pokemons[index]} does not exist\n")
     elif self.pokemons[index].ko:
-      print(f"Pokemon is ko")
+      print(f"{self.pokemons[index]} is ko, choose another one or heal it\n")
+    elif self.pokemons[index] == self.active:
+      print(f"You cannot change to your current pokemon\n")
     else:
       self.active.name = self.pokemons[index]
-      print(f"{self.name} active pokemon changed to {self.active.name}")
+      print(f"{self.name} active pokemon changed to {self.active.name}\n")
   
   def attack(self,trainer):
     print(f"{self.active.name} attacks {trainer.active.name}")
     self.active.attack(trainer.active)
   
   
-bulbazur = Pokemon("Bulbazur", 1, "water", 2)
-pikachu = Pokemon("Pikachu", 1, "grass", 3)
+squirtle = Pokemon("Squirtle", 1, "water", 2)
+bulbazur = Pokemon("Bulbazur", 1, "grass", 3)
 charizard = Pokemon("Charizard", 1, "fire", 2)
-Ash = Trainer("Ash", 4, [pikachu,charizard,bulbazur])
-Erika = Trainer("Erika", 3, [bulbazur,pikachu,charizard])
+Ash = Trainer("Ash", 4, [squirtle,charizard,bulbazur])
+Erika = Trainer("Erika", 3, [bulbazur,squirtle,charizard])
 Ash.attack(Erika);
 Ash.attack(Erika);
 Erika.attack(Ash);
 Erika.attack(Ash);
+Ash.attack(Erika)
+Ash.switchActive(1)
+Erika.switchActive(0)
+Ash.attack(Erika)
+Ash.takePotion()
 Ash.attack(Erika)
