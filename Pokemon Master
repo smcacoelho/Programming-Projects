@@ -107,25 +107,44 @@ class Trainer:
     print(f"{self.name}.{self.active.name} attacks {trainer.name}.{trainer.active.name}")
     self.active.attack(trainer.active)
   
+ 
+
+class Grass(Pokemon):
+  def __init__(self,name, level, type, max_health):
+    super().__init__(self,name, level, type, max_health)
+    self.type = "grass"
+  
+  def attack(self,pokemon):
+    if pokemon.type == "grass":
+      pokemon.lose_health(pokemon.level)
+    elif pokemon.type == "fire":
+      pokemon.lose_health(0.5*pokemon.level)
+    else:
+      pass
+
+
+class Fire(Pokemon):
+  def __init__(self,name, level, type, max_health):
+    super().__init__(self,name, level, type, max_health)
+    self.type = "fire"
+
+  def attack(self,pokemon):
+    if pokemon.type == "fire":
+      pokemon.lose_health(pokemon.level)
+    elif pokemon.type == "grass":
+      pokemon.lose_health(2*pokemon.level)
+    else: pokemon.type == "water":
+      pokemon.lose_health(0.5*pokemon.level)
+    
+
 class Water(Pokemon):
   def __init__(self,name, level, type, max_health):
     super().__init__(self,name, level, type, max_health)
     self.type = "water"
-    self.name = name
-    self.level = level
-    self.max_health = max_health
-    self.health = max_health
-    self.ko = False
-    self.xp = 0
+
+  def attack(self, pokemon):
   
-  def dealDamage(self,pokemon):
-    if(pokemon.type == self.type):
-      
-    
-
-class Grass(Pokemon):
-
-class Fire(Pokemon):
+  
 
 
 squirtle = Pokemon("Squirtle", 1, "water", 2)
