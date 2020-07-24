@@ -16,8 +16,11 @@ class Pokemon:
       print(f"{self.name} just lost {value} health. {self.health}/{self.max_health}")
     
   def gain_health(self): #called after drinking a potion
-    self.health = self.max_health
-    print(f"{self.name} is fully healed")
+    if self.health == self.max_health:
+      print(f"pokemon has full health")
+    else:
+      self.health = self.max_health
+      print(f"{self.name} is fully healed")
   
   def knock_out(self):
     self.ko = True
@@ -36,7 +39,7 @@ class Pokemon:
   def evolve(self): #when pokemon evolves it has health regenrated, and max_health value is increased
     self.xp = 0
     self.level+=1
-    self.max_health+=5    
+    self.max_health+=2    
   
   def attack(self,pokemon):
     if pokemon.ko:
@@ -104,7 +107,27 @@ class Trainer:
     print(f"{self.name}.{self.active.name} attacks {trainer.name}.{trainer.active.name}")
     self.active.attack(trainer.active)
   
+class Water(Pokemon):
+  def __init__(self,name, level, type, max_health):
+    super().__init__(self,name, level, type, max_health)
+    self.type = "water"
+    self.name = name
+    self.level = level
+    self.max_health = max_health
+    self.health = max_health
+    self.ko = False
+    self.xp = 0
   
+  def dealDamage(self,pokemon):
+    if(pokemon.type == self.type):
+      
+    
+
+class Grass(Pokemon):
+
+class Fire(Pokemon):
+
+
 squirtle = Pokemon("Squirtle", 1, "water", 2)
 bulbazur = Pokemon("Bulbazur", 1, "grass", 3)
 charizard = Pokemon("Charizard", 1, "fire", 9)
@@ -134,5 +157,6 @@ Erika.switchActive(1)
 Ash.attack(Erika)
 Ash.takePotion()
 Ash.attack(Erika)
+
 
 
