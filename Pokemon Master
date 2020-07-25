@@ -1,12 +1,12 @@
 class Pokemon:
-  def __init__(self,name, level, type, max_health):
+  def __init__(self, name, max_health):
     self.name = name
-    self.level = level
-    self.type = type
+    self.level = 1
     self.max_health = max_health
     self.health = max_health
     self.ko = False
     self.xp = 0
+    
 
   def lose_health(self, value):
     self.health-=value
@@ -21,6 +21,7 @@ class Pokemon:
     else:
       self.health = self.max_health
       print(f"{self.name} is fully healed")
+      self.ko = False
   
   def knock_out(self):
     self.ko = True
@@ -46,35 +47,15 @@ class Pokemon:
       print(f"{pokemon.name} is ko already. You cannot attack")
     elif self.ko:
       print(f"{self.name} is ko cannot attack. Please change pokemon or heal it")
-    else:
-      if self.type == pokemon.type:
+    elif self.type == pokemon.type:
         pokemon.lose_health(self.level)
         self.gain_xp(2)
-      
-      elif self.type == "grass":
-        pokemon.lose_health(0.5*self.level)
-        self.gain_xp(4)
-     
-      elif self.type == "water" and pokemon.type == "fire":
-        pokemon.lose_health(0.5*self.level)
-        self.gain_xp(4)
-      
-      elif self.type == "water" and pokemon.type == "grass":
-        pokemon.lose_health(2*self.level)
-        self.gain_xp(8)
-      
-      elif self.type == "fire" and pokemon.type == "grass":
-        pokemon.lose_health(2*self.level)
-        self.gain_xp(8)
-
-      elif self.type == "fire" and pokemon.type == "water":     
-        pokemon.lose_health(0.5*self.level)
-        self.gain_xp(4)
-      else:
-        print(f"Not valid pokemon")
+    else: return True
 
   def __repr__(self): #when object is printed name is returned
     return self.name
+
+
 
 class Trainer:
   def __init__(self,name,potions, pokemons):
@@ -84,12 +65,13 @@ class Trainer:
     self.active = pokemons[0]
   
   def takePotion(self):
+    print(f"{self.name} took a potion")
     if self.active.health == self.active.max_health:
       print(f"{self.name}.{self.active.name} has full energy")
     else:
       self.active.gain_health();
       self.potions-=1
-      print(f"{self.name}.{self.potions} potions left")
+      print(f"{self.name} has {self.potions} potions left")
   
   def switchActive(self,index):
     
@@ -106,76 +88,74 @@ class Trainer:
   def attack(self,trainer):
     print(f"{self.name}.{self.active.name} attacks {trainer.name}.{trainer.active.name}")
     self.active.attack(trainer.active)
-  
- 
+
+
+
+#Child classes
 
 class Grass(Pokemon):
-  def __init__(self,name, level, type, max_health):
-    super().__init__(self,name, level, type, max_health)
+  def __init__(self, name, max_health):
+    super().__init__(name, max_health)
     self.type = "grass"
   
   def attack(self,pokemon):
-    if pokemon.type == "grass":
-      pokemon.lose_health(pokemon.level)
-    elif pokemon.type == "fire":
-      pokemon.lose_health(0.5*pokemon.level)
-    else:
-      pass
-
+    if super().attack(pokemon): #will only do damage if the checks on parent attack() are false and True is returned 
+      if pokemon.type == "fire" or pokemon.type == "water":
+        pokemon.lose_health(0.5*pokemon.level)
+      else:
+        print(f"Invalid pokemon")
 
 class Fire(Pokemon):
-  def __init__(self,name, level, type, max_health):
-    super().__init__(self,name, level, type, max_health)
+  def __init__(self, name, max_health):
+    super().__init__(name, max_health)
     self.type = "fire"
 
   def attack(self,pokemon):
-    if pokemon.type == "fire":
-      pokemon.lose_health(pokemon.level)
-    elif pokemon.type == "grass":
-      pokemon.lose_health(2*pokemon.level)
-    else: pokemon.type == "water":
-      pokemon.lose_health(0.5*pokemon.level)
+    if super().attack(pokemon):
+      if pokemon.type == "grass":
+        pokemon.lose_health(2*pokemon.level)
+      elif pokemon.type == "water":
+        pokemon.lose_health(0.5*pokemon.level)
+      else:
+        print(f"Invalid pokemon")
     
 
 class Water(Pokemon):
-  def __init__(self,name, level, type, max_health):
-    super().__init__(self,name, level, type, max_health)
+  def __init__(self, name, max_health):
+    super().__init__(name, max_health)
     self.type = "water"
 
   def attack(self, pokemon):
-  
+    if super().attack(pokemon):
+      if pokemon.type == "grass":
+        pokemon.lose_health(2*pokemon.level)
+      elif pokemon.type == "fire":
+        pokemon.lose_health(2*pokemon.level)
+      else:
+        print(f"Invalid pokemon")
   
 
-
-squirtle = Pokemon("Squirtle", 1, "water", 2)
-bulbazur = Pokemon("Bulbazur", 1, "grass", 3)
-charizard = Pokemon("Charizard", 1, "fire", 9)
-venusaur = Pokemon("Venusaur", 1, "grass", 5)
-blastoise = Pokemon("Blastoise",1,"water",8)
-charmeleon = Pokemon("Charmeleon", 1, "fire", 9)
+#Game
+squirtle = Water("Squirtle", 2)
+bulbazur = Grass("Bulbazur", 3)
+charizard = Fire("Charizard", 5)
+venusaur = Grass("Venusaur", 4)
+blastoise = Water("Blastoise", 3)
+charmeleon = Fire("Charmeleon", 6)
 
 Ash = Trainer("Ash", 4, [blastoise,charizard,bulbazur])
 Erika = Trainer("Erika", 3, [venusaur,squirtle,charmeleon])
+
 Ash.attack(Erika)
-print(Ash.active.health)
 Ash.attack(Erika)
-print(Ash.active.health)
 Erika.attack(Ash)
-print(Ash.active.health)
-Erika.switchActive(1)
-print(Erika.active.health)
-print(Ash.active.health)
-
-
+Erika.switchActive(2)
 Ash.attack(Erika)
-print(Ash.active.health)
-print(Erika.active.health)
 Erika.attack(Ash)
-print(Ash.active.health)
-Erika.switchActive(1)
 Ash.attack(Erika)
-Ash.takePotion()
 Ash.attack(Erika)
-
-
-
+Erika.attack(Ash)
+Erika.switchActive(0)
+Erika.takePotion()
+Erika.attack(Ash)
+Ash.attack(Erika)
