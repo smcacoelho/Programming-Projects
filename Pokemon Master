@@ -21,7 +21,6 @@ class Pokemon:
     else:
       self.health = self.max_health
       print(f"{self.name} is fully healed")
-      self.ko = False
   
   def knock_out(self):
     self.ko = True
@@ -31,16 +30,17 @@ class Pokemon:
     self.ko = False
     print(f"{self.name} was revived")
 
-  def gain_xp(self, value):
-    self.xp+=value
+  def gain_xp(self):
+    self.xp+=1
     if self.xp % 10 == 0:
       self.evolve()
       print(f"{self.name} passed to level {self.level}")
   
-  def evolve(self): #when pokemon evolves it has health regenrated, and max_health value is increased
+  def evolve(self): #when pokemon evolves it has its health regenerated, and max_health is increased
     self.xp = 0
     self.level+=1
-    self.max_health+=2    
+    self.max_health+=2 
+    self.health = self.max_health   
   
   def attack(self,pokemon):
     if pokemon.ko:
@@ -49,8 +49,10 @@ class Pokemon:
       print(f"{self.name} is ko cannot attack. Please change pokemon or heal it")
     elif self.type == pokemon.type:
         pokemon.lose_health(self.level)
-        self.gain_xp(2)
-    else: return True
+        self.gain_xp()
+    else:
+      self.gain_xp()      
+      return True
 
   def __repr__(self): #when object is printed name is returned
     return self.name
@@ -69,6 +71,7 @@ class Trainer:
     if self.active.health == self.active.max_health:
       print(f"{self.name}.{self.active.name} has full energy")
     else:
+      self.revive()
       self.active.gain_health();
       self.potions-=1
       print(f"{self.name} has {self.potions} potions left")
@@ -99,6 +102,7 @@ class Grass(Pokemon):
     self.type = "grass"
   
   def attack(self,pokemon):
+    self.gain_xp()
     if super().attack(pokemon): #will only do damage if the checks on parent attack() are false and True is returned 
       if pokemon.type == "fire" or pokemon.type == "water":
         pokemon.lose_health(0.5*pokemon.level)
@@ -112,6 +116,7 @@ class Fire(Pokemon):
 
   def attack(self,pokemon):
     if super().attack(pokemon):
+      self.gain_xp()
       if pokemon.type == "grass":
         pokemon.lose_health(2*pokemon.level)
       elif pokemon.type == "water":
@@ -127,6 +132,7 @@ class Water(Pokemon):
 
   def attack(self, pokemon):
     if super().attack(pokemon):
+      self.gain_xp()
       if pokemon.type == "grass":
         pokemon.lose_health(2*pokemon.level)
       elif pokemon.type == "fire":
@@ -159,3 +165,4 @@ Erika.switchActive(0)
 Erika.takePotion()
 Erika.attack(Ash)
 Ash.attack(Erika)
+
